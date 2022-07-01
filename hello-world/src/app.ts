@@ -12,7 +12,7 @@ export default class HelloWorld {
 	private texto: MRE.Actor = null;
 	private hostButton: MRE.Actor = null;
 	private button: MRE.Actor = null;
-	private seta: MRE.Actor = null;
+	//private seta: MRE.Actor = null;
 	private buttons: MRE.Actor[] = [];
 	private setas: MRE.Actor[] = [];
 	private assets: MRE.AssetContainer;
@@ -28,9 +28,9 @@ export default class HelloWorld {
 		// set up somewhere to store loaded assets (meshes, textures, animations, gltfs, etc.)
 		this.assets = new MRE.AssetContainer(this.context);
 
-		const hostButtonAsset = await this.assets.loadGltf('Botão_Azul.glb', "box");
+		//const hostButtonAsset = await this.assets.loadGltf('Botão_Azul.glb', "box");
 		const buttonAsset = await this.assets.loadGltf('altspace-cube.glb', "box");
-		const setAsset = await this.assets.loadGltf('Seta.glb', "box");
+		const setaAsset = await this.assets.loadGltf('Seta.glb', "box");
 
 		// Create a new actor with no mesh, but some text.
 		
@@ -41,14 +41,14 @@ export default class HelloWorld {
 					app: { position: { x: 0, y: 0.5, z: 0 } }
 				},
 				text: {
-					contents: "Espere a pergunta!!!",
+					contents: "Valendo!!!!",
 					anchor: MRE.TextAnchorLocation.MiddleCenter,
 					color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
 					height: 0.3
 				}
 			}
 		});
-		
+
 		this.button = MRE.Actor.CreateFromPrefab(this.context, {
 			// using the data we loaded earlier
 			firstPrefabFrom: buttonAsset,
@@ -66,33 +66,7 @@ export default class HelloWorld {
 			}
 		});
 
-		this.hostButton = MRE.Actor.CreateFromPrefab(this.context, {
-			// using the data we loaded earlier
-			firstPrefabFrom: hostButtonAsset,
-			// Also apply the following generic actor properties.
-			actor: {
-				name: 'Botão do Host',
-				// Parent the glTF model to the text actor, so the transform is relative to the text
-				
-				transform: {
-					local: {
-						position: { x: 5, y: 3, z: 0 },
-						scale: { x: 1, y: 1, z: 1 }
-					}
-				}
-			}});
-
-		const hostButtonBehavior = this.hostButton.setBehavior(MRE.ButtonBehavior);
-	
-		hostButtonBehavior.onClick(usuario => {
-
-			this.texto.text.contents = 'Valendo!!!!';
-
-			
-			//this.buttons.push(cubo);
-			
-			//flipAnim.play();
-		});
+		
 		// Here we create an animation for our text actor. First we create animation data, which can be used on any
 		// actor. We'll reference that actor with the placeholder "text".
 		const spinAnimData = this.assets.createAnimationData(
@@ -150,7 +124,7 @@ export default class HelloWorld {
 
 			const seta = MRE.Actor.CreateFromPrefab(this.context, {
 				// using the data we loaded earlier
-				firstPrefabFrom: setAsset,
+				firstPrefabFrom: setaAsset,
 				// Also apply the following generic actor properties.
 				actor: {
 					name: 'Seta Escolhido',
@@ -163,7 +137,7 @@ export default class HelloWorld {
 						}
 					},
 					attachment: {
-						attachPoint: 'head' , 
+						attachPoint: 'head', 
 						userId: usuario.id
 						
 					}
