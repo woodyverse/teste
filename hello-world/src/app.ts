@@ -9,8 +9,10 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
  * The main class of this app. All the logic goes here.
  */
 export default class HelloWorld {
-	private text: MRE.Actor = null;
+	private texto: MRE.Actor = null;
 	private cube: MRE.Actor = null;
+	private ceta: MRE.Actor = null;
+	private setas: MRE.Actor[] = [];
 	private assets: MRE.AssetContainer;
 
 	constructor(private context: MRE.Context) {
@@ -25,14 +27,14 @@ export default class HelloWorld {
 		this.assets = new MRE.AssetContainer(this.context);
 
 		// Create a new actor with no mesh, but some text.
-		this.text = MRE.Actor.Create(this.context, {
+		this.texto = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
 				transform: {
 					app: { position: { x: 0, y: 0.5, z: 0 } }
 				},
 				text: {
-					contents: "Hello World!",
+					contents: "Espere a pergunta!!!",
 					anchor: MRE.TextAnchorLocation.MiddleCenter,
 					color: { r: 30 / 255, g: 206 / 255, b: 213 / 255 },
 					height: 0.3
@@ -61,13 +63,13 @@ export default class HelloWorld {
 		// Once the animation data is created, we can create a real animation from it.
 		spinAnimData.bind(
 			// We assign our text actor to the actor placeholder "text"
-			{ text: this.text },
+			{ text: this.texto },
 			// And set it to play immediately, and bounce back and forth from start to end
 			{ isPlaying: true, wrapMode: MRE.AnimationWrapMode.PingPong });
 
 		// Load a glTF model before we use it
 		const cubeData = await this.assets.loadGltf('altspace-cube.glb', "box");
-
+		const setaAsset = await this.assets.loadGltf('Seta.glb', "box");
 		// spawn a copy of the glTF model
 		this.cube = MRE.Actor.CreateFromPrefab(this.context, {
 			// using the data we loaded earlier
@@ -76,7 +78,7 @@ export default class HelloWorld {
 			actor: {
 				name: 'Altspace Cube',
 				// Parent the glTF model to the text actor, so the transform is relative to the text
-				parentId: this.text.id,
+				parentId: this.texto.id,
 				transform: {
 					local: {
 						position: { x: 0, y: -1, z: 0 },
@@ -124,7 +126,31 @@ export default class HelloWorld {
 		});
 
 		// When clicked, do a 360 sideways.
-		buttonBehavior.onClick(_ => {
+		buttonBehavior.onClick(usuario => {
+
+			this.texto.text.contents = "Direito de resposta para:" + usuario.name;
+
+			this.ceta = MRE.Actor.CreateFromPrefab(this.context, {
+				// using the data we loaded earlier
+				firstPrefabFrom: setaAsset,
+				// Also apply the following generic actor properties.
+				actor: {
+					name: 'Seta Escolhido',
+					// Parent the glTF model to the text actor, so the transform is relative to the text
+					
+					transform: {
+						local: {
+							position: { x: 0, y: 0, z: 0 },
+							scale: { x: 0.4, y: 0.4, z: 0.4 }
+						}
+					},
+					attachment: {
+						attachPoint: 'head', 
+						userId: usuario.id
+						
+					}
+				}
+			});
 			flipAnim.play();
 		});
 	}
