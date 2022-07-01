@@ -22,7 +22,9 @@ dotenv.config();
 function runApp() {
 	// Start listening for connections, and serve static files.
 	const server = new MRE.WebHost({
-		baseDir: resolvePath(__dirname, '../public')
+		baseDir: resolvePath(__dirname, '../public'),
+		baseUrl: 'http://ec2-3-236-82-18.compute-1.amazonaws.com/',
+		port:3000
 	});
 
 	// Handle new application sessions
