@@ -29,8 +29,8 @@ export default class HelloWorld {
 		this.assets = new MRE.AssetContainer(this.context);
 
 		const hostButtonAsset = await this.assets.loadGltf('Botão_Azul.glb', "box");
-		const buttonAsset = await this.assets.loadGltf('Botão_Vermelho.glb', "box");
-		const setaAsset = await this.assets.loadGltf('Seta.glb', "box");
+		const buttonAsset = await this.assets.loadGltf('altspace-cube.glb', "box");
+		const setAsset = await this.assets.loadGltf('Seta.glb', "box");
 
 		// Create a new actor with no mesh, but some text.
 		
@@ -166,7 +166,7 @@ export default class HelloWorld {
 
 			const seta = MRE.Actor.CreateFromPrefab(this.context, {
 				// using the data we loaded earlier
-				firstPrefabFrom: setaAsset,
+				firstPrefabFrom: setAsset,
 				// Also apply the following generic actor properties.
 				actor: {
 					name: 'Seta Escolhido',
