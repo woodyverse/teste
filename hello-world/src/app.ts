@@ -11,6 +11,7 @@ import * as MRE from '@microsoft/mixed-reality-extension-sdk';
 export default class HelloWorld {
 	private texto: MRE.Actor = null;
 	private hostButton: MRE.Actor = null;
+	private button: MRE.Actor = null;
 	private buttons: MRE.Actor[] = [];
 	private setas: MRE.Actor[] = [];
 	private assets: MRE.AssetContainer;
@@ -26,7 +27,12 @@ export default class HelloWorld {
 		// set up somewhere to store loaded assets (meshes, textures, animations, gltfs, etc.)
 		this.assets = new MRE.AssetContainer(this.context);
 
+		const hostButtonAsset = await this.assets.loadGltf('Botão_Azul.glb', "box");
+		const buttonAsset = await this.assets.loadGltf('Botão_Vermelho.glb', "box");
+		const setaAsset = await this.assets.loadGltf('Seta.glb', "box");
+
 		// Create a new actor with no mesh, but some text.
+		
 		this.texto = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
@@ -41,8 +47,6 @@ export default class HelloWorld {
 				}
 			}
 		});
-
-		const hostButtonAsset = await this.assets.loadGltf('Botão_Azul.glb', "box");
 
 		this.hostButton = MRE.Actor.CreateFromPrefab(this.context, {
 			// using the data we loaded earlier
@@ -62,34 +66,27 @@ export default class HelloWorld {
 
 		const hostButtonBehavior = this.hostButton.setBehavior(MRE.ButtonBehavior);
 	
-
 		hostButtonBehavior.onClick(usuario => {
 
 			this.texto.text.contents = 'Valendo!!!!';
 
-			const cubo = MRE.Actor.CreateFromPrefab(this.context, {
+			this.button = MRE.Actor.CreateFromPrefab(this.context, {
 				// using the data we loaded earlier
-				firstPrefabFrom: setaAsset,
+				firstPrefabFrom: buttonAsset,
 				// Also apply the following generic actor properties.
 				actor: {
-					name: 'Seta Escolhido',
+					name: 'Botao Plateia',
 					// Parent the glTF model to the text actor, so the transform is relative to the text
-					
+					parentId: this.texto.id,
 					transform: {
 						local: {
-							position: { x: 0, y: 1.7, z: 0 },
+							position: { x: 0, y: -1, z: 0 },
 							scale: { x: 0.4, y: 0.4, z: 0.4 }
 						}
-					},
-					attachment: {
-						attachPoint: 'head' , 
-						userId: usuario.id
-						
 					}
 				}
-				
 			});
-			this.buttons.push(cubo);
+			//this.buttons.push(cubo);
 			
 			//flipAnim.play();
 		});
@@ -119,26 +116,10 @@ export default class HelloWorld {
 			{ isPlaying: true, wrapMode: MRE.AnimationWrapMode.PingPong });
 
 		// Load a glTF model before we use it
-		const buttonAsset = await this.assets.loadGltf('Botão_Vermelho.glb', "box");
-		const setaAsset = await this.assets.loadGltf('Seta.glb', "box");
+		
 		// spawn a copy of the glTF model
-		const cube = MRE.Actor.CreateFromPrefab(this.context, {
-			// using the data we loaded earlier
-			firstPrefabFrom: buttonAsset,
-			// Also apply the following generic actor properties.
-			actor: {
-				name: 'Altspace Cube',
-				// Parent the glTF model to the text actor, so the transform is relative to the text
-				parentId: this.texto.id,
-				transform: {
-					local: {
-						position: { x: 0, y: -1, z: 0 },
-						scale: { x: 0.4, y: 0.4, z: 0.4 }
-					}
-				}
-			}
-		});
-		this.buttons.push(cube);
+		
+		//this.buttons.push(button);
 
 		// Create some animations on the cube.
 		const flipAnimData = this.assets.createAnimationData(
@@ -154,23 +135,23 @@ export default class HelloWorld {
 			}]}
 		);
 		// apply the animation to our cube
-		const flipAnim = await flipAnimData.bind({ target: cube });
+		//const flipAnim = await flipAnimData.bind({ target: button });
 
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
-		const buttonBehavior = cube.setBehavior(MRE.ButtonBehavior);
+		const buttonBehavior = this.button.setBehavior(MRE.ButtonBehavior);
 
 		// Trigger the grow/shrink animations on hover.
 		buttonBehavior.onHover('enter', () => {
 			// use the convenience function "AnimateTo" instead of creating the animation data in advance
-			MRE.Animation.AnimateTo(this.context, cube, {
+			MRE.Animation.AnimateTo(this.context, this.button, {
 				destination: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } },
 				duration: 0.3,
 				easing: MRE.AnimationEaseCurves.EaseOutSine
 			});
 		});
 		buttonBehavior.onHover('exit', () => {
-			MRE.Animation.AnimateTo(this.context, cube, {
+			MRE.Animation.AnimateTo(this.context, this.button, {
 				destination: { transform: { local: { scale: { x: 0.4, y: 0.4, z: 0.4 } } } },
 				duration: 0.3,
 				easing: MRE.AnimationEaseCurves.EaseOutSine
@@ -205,7 +186,8 @@ export default class HelloWorld {
 				
 			});
 			this.setas.push(seta);
-			this.buttons.slice(1,1);
+			this.button.destroy();
+			//this.buttons.slice(1,1);
 			
 			//flipAnim.play();
 		});
