@@ -27,14 +27,9 @@ export default class HelloWorld {
 	private async started() {
 		// set up somewhere to store loaded assets (meshes, textures, animations, gltfs, etc.)
 		this.assets = new MRE.AssetContainer(this.context);
-
 		//const hostButtonAsset = await this.assets.loadGltf('Botão_Azul.glb', "box");
-		const buttonAsset = await this.assets.loadGltf('altspace-cube.glb', "box");
-		const setaAsset = await this.assets.loadGltf('Seta.glb', "box");
-
 		// Create a new actor with no mesh, but some text.
-		
-		this.texto = MRE.Actor.Create(this.context, {
+				this.texto = MRE.Actor.Create(this.context, {
 			actor: {
 				name: 'Text',
 				transform: {
@@ -48,6 +43,7 @@ export default class HelloWorld {
 				}
 			}
 		});
+		const buttonAsset = await this.assets.loadGltf('altspace-cube.glb', "box");
 
 		this.button = MRE.Actor.CreateFromPrefab(this.context, {
 			// using the data we loaded earlier
@@ -117,6 +113,7 @@ export default class HelloWorld {
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
 		const buttonBehavior = this.button.setBehavior(MRE.ButtonBehavior);
+		const setaAsset = await this.assets.loadGltf('Seta.glb', "box");
 		// When clicked, do a 360 sideways.
 		buttonBehavior.onClick(usuario => {
 
