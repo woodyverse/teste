@@ -48,6 +48,23 @@ export default class HelloWorld {
 				}
 			}
 		});
+		
+		this.button = MRE.Actor.CreateFromPrefab(this.context, {
+			// using the data we loaded earlier
+			firstPrefabFrom: buttonAsset,
+			// Also apply the following generic actor properties.
+			actor: {
+				name: 'Botao Plateia',
+				// Parent the glTF model to the text actor, so the transform is relative to the text
+				parentId: this.texto.id,
+				transform: {
+					local: {
+						position: { x: 0, y: -1, z: 0 },
+						scale: { x: 0.4, y: 0.4, z: 0.4 }
+					}
+				}
+			}
+		});
 
 		this.hostButton = MRE.Actor.CreateFromPrefab(this.context, {
 			// using the data we loaded earlier
@@ -71,22 +88,7 @@ export default class HelloWorld {
 
 			this.texto.text.contents = 'Valendo!!!!';
 
-			this.button = MRE.Actor.CreateFromPrefab(this.context, {
-				// using the data we loaded earlier
-				firstPrefabFrom: buttonAsset,
-				// Also apply the following generic actor properties.
-				actor: {
-					name: 'Botao Plateia',
-					// Parent the glTF model to the text actor, so the transform is relative to the text
-					parentId: this.texto.id,
-					transform: {
-						local: {
-							position: { x: 0, y: -1, z: 0 },
-							scale: { x: 0.4, y: 0.4, z: 0.4 }
-						}
-					}
-				}
-			});
+			
 			//this.buttons.push(cubo);
 			
 			//flipAnim.play();
@@ -141,24 +143,6 @@ export default class HelloWorld {
 		// Set up cursor interaction. We add the input behavior ButtonBehavior to the cube.
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
 		const buttonBehavior = this.button.setBehavior(MRE.ButtonBehavior);
-
-		// Trigger the grow/shrink animations on hover.
-		buttonBehavior.onHover('enter', () => {
-			// use the convenience function "AnimateTo" instead of creating the animation data in advance
-			MRE.Animation.AnimateTo(this.context, this.button, {
-				destination: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } },
-				duration: 0.3,
-				easing: MRE.AnimationEaseCurves.EaseOutSine
-			});
-		});
-		buttonBehavior.onHover('exit', () => {
-			MRE.Animation.AnimateTo(this.context, this.button, {
-				destination: { transform: { local: { scale: { x: 0.4, y: 0.4, z: 0.4 } } } },
-				duration: 0.3,
-				easing: MRE.AnimationEaseCurves.EaseOutSine
-			});
-		});
-
 		// When clicked, do a 360 sideways.
 		buttonBehavior.onClick(usuario => {
 
