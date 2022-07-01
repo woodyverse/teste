@@ -12,6 +12,7 @@ export default class HelloWorld {
 	private texto: MRE.Actor = null;
 	private hostButton: MRE.Actor = null;
 	private button: MRE.Actor = null;
+	private seta: MRE.Actor = null;
 	private buttons: MRE.Actor[] = [];
 	private setas: MRE.Actor[] = [];
 	private assets: MRE.AssetContainer;
@@ -69,7 +70,7 @@ export default class HelloWorld {
 		hostButtonBehavior.onClick(usuario => {
 
 			this.texto.text.contents = 'Valendo!!!!';
-
+			this.seta.destroy();
 			this.button = MRE.Actor.CreateFromPrefab(this.context, {
 				// using the data we loaded earlier
 				firstPrefabFrom: buttonAsset,
@@ -85,9 +86,8 @@ export default class HelloWorld {
 						}
 					}
 				}
-			});
-			//this.buttons.push(cubo);
-			
+			});			
+			//this.buttons.push(cubo);			
 			//flipAnim.play();
 		});
 		// Here we create an animation for our text actor. First we create animation data, which can be used on any
@@ -163,7 +163,7 @@ export default class HelloWorld {
 
 			this.texto.text.contents = usuario.name;
 
-			const seta = MRE.Actor.CreateFromPrefab(this.context, {
+			this.seta = MRE.Actor.CreateFromPrefab(this.context, {
 				// using the data we loaded earlier
 				firstPrefabFrom: setaAsset,
 				// Also apply the following generic actor properties.
@@ -185,7 +185,7 @@ export default class HelloWorld {
 				}
 				
 			});
-			this.setas.push(seta);
+			//this.setas.push(seta);
 			this.button.destroy();
 			//this.buttons.slice(1,1);
 			
