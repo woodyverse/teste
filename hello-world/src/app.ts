@@ -70,7 +70,7 @@ export default class HelloWorld {
 		hostButtonBehavior.onClick(usuario => {
 
 			this.texto.text.contents = 'Valendo!!!!';
-			this.seta.destroy();
+			//this.seta.destroy();
 			this.button = MRE.Actor.CreateFromPrefab(this.context, {
 				// using the data we loaded earlier
 				firstPrefabFrom: buttonAsset,
@@ -186,7 +186,7 @@ export default class HelloWorld {
 				
 			});
 			//this.setas.push(seta);
-			this.button.destroy();
+			//this.button.destroy();
 			//this.buttons.slice(1,1);
 			
 			//flipAnim.play();
