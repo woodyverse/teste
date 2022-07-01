@@ -60,38 +60,37 @@ export default class HelloWorld {
 				transform: {
 					local: {
 						position: { x: 5, y: 3, z: 0 },
-						scale: { x: 0.5, y: 0.5, z: 0.5 }
+						scale: { x: 1, y: 1, z: 1 }
 					}
 				}
 			}});
 
 		const hostButtonBehavior = this.hostButton.setBehavior(MRE.ButtonBehavior);
 	
-		hostButtonBehavior.onClick(_ => {
+		hostButtonBehavior.onClick(usuario => {
 
 			this.texto.text.contents = 'Valendo!!!!';
-			//this.seta.destroy();
-			
-			//this.buttons.push(cubo);			
-			//flipAnim.play();
-		});
 
-		this.button = MRE.Actor.CreateFromPrefab(this.context, {
-			// using the data we loaded earlier
-			firstPrefabFrom: buttonAsset,
-			// Also apply the following generic actor properties.
-			actor: {
-				name: 'Botao Plateia',
-				// Parent the glTF model to the text actor, so the transform is relative to the text
-				parentId: this.texto.id,
-				transform: {
-					local: {
-						position: { x: 0, y: -1, z: 0 },
-						scale: { x: 0.4, y: 0.4, z: 0.4 }
+			this.button = MRE.Actor.CreateFromPrefab(this.context, {
+				// using the data we loaded earlier
+				firstPrefabFrom: buttonAsset,
+				// Also apply the following generic actor properties.
+				actor: {
+					name: 'Botao Plateia',
+					// Parent the glTF model to the text actor, so the transform is relative to the text
+					parentId: this.texto.id,
+					transform: {
+						local: {
+							position: { x: 0, y: -1, z: 0 },
+							scale: { x: 0.4, y: 0.4, z: 0.4 }
+						}
 					}
 				}
-			}
-		});			
+			});
+			//this.buttons.push(cubo);
+			
+			//flipAnim.play();
+		});
 		// Here we create an animation for our text actor. First we create animation data, which can be used on any
 		// actor. We'll reference that actor with the placeholder "text".
 		const spinAnimData = this.assets.createAnimationData(
@@ -143,11 +142,29 @@ export default class HelloWorld {
 		// Button behaviors have two pairs of events: hover start/stop, and click start/stop.
 		const buttonBehavior = this.button.setBehavior(MRE.ButtonBehavior);
 
+		// Trigger the grow/shrink animations on hover.
+		buttonBehavior.onHover('enter', () => {
+			// use the convenience function "AnimateTo" instead of creating the animation data in advance
+			MRE.Animation.AnimateTo(this.context, this.button, {
+				destination: { transform: { local: { scale: { x: 0.5, y: 0.5, z: 0.5 } } } },
+				duration: 0.3,
+				easing: MRE.AnimationEaseCurves.EaseOutSine
+			});
+		});
+		buttonBehavior.onHover('exit', () => {
+			MRE.Animation.AnimateTo(this.context, this.button, {
+				destination: { transform: { local: { scale: { x: 0.4, y: 0.4, z: 0.4 } } } },
+				duration: 0.3,
+				easing: MRE.AnimationEaseCurves.EaseOutSine
+			});
+		});
+
+		// When clicked, do a 360 sideways.
 		buttonBehavior.onClick(usuario => {
 
 			this.texto.text.contents = usuario.name;
 
-			this.seta = MRE.Actor.CreateFromPrefab(this.context, {
+			const seta = MRE.Actor.CreateFromPrefab(this.context, {
 				// using the data we loaded earlier
 				firstPrefabFrom: setaAsset,
 				// Also apply the following generic actor properties.
@@ -169,7 +186,7 @@ export default class HelloWorld {
 				}
 				
 			});
-			//this.setas.push(seta);
+			this.setas.push(seta);
 			//this.button.destroy();
 			//this.buttons.slice(1,1);
 			
